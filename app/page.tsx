@@ -2,7 +2,6 @@
 import { useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import { mockUserDatabase } from "../mockDatabase"; // Import the mock database
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -17,19 +16,14 @@ export default function Home() {
     setError("");
 
     try {
-      // Simulate authentication
+      // Simulate authentication (replace with actual API call in the future)
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Check if the user exists in the mock database
-      const user = mockUserDatabase[email];
-      if (!user || user.password !== password) {
-        throw new Error("Invalid email or password.");
-      }
-
-      // Redirect to HomePage with the user's name
-      router.push(`/HomePage?userName=${encodeURIComponent(user.name)}`);
+      // Simulate successful login
+      const userName = "John Doe"; // Replace with actual user data from backend
+      router.push(`/HomePage?userName=${encodeURIComponent(userName)}`);
     } catch (err) {
-      setError(err.message || "An error occurred. Please try again.");
+      setError("Invalid email or password. Please try again.");
     } finally {
       setIsLoading(false);
     }
