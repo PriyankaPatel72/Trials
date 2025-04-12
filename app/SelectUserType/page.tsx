@@ -48,15 +48,6 @@ export default function NavigationPage({ userName }: { userName?: string | null 
               I am a Researcher
             </button>
           </div>
-<<<<<<< HEAD
-=======
-          <button
-            onClick={() => router.push("/NewResearcher")}
-            className="w-full bg-green-600 text-white py-4 px-8 text-lg rounded-2xl hover:bg-green-700 transition"
-          >
-            Researcher
-          </button>
->>>>>>> d7922967192c8ec5cd12705891e6a28a99dd788e
         </div>
       </main>
 
