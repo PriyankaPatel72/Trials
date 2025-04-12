@@ -1,63 +1,130 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import { mockUserDatabase } from "../../mockDatabase"; // Import the mock database
 
-export default function NewUser() {
+export default function NewResearcher() {
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [lastName, setLastName] = useState("");
-  const [age, setAge] = useState("");
-  const [weight, setWeight] = useState("");
-  const [height, setHeight] = useState("");
-  const [dob, setDob] = useState("");
-  const [gender, setGender] = useState("");
-  const [interests, setInterests] = useState<string[]>([]);
+  const [firmName, setDepartment] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+  //   setError("");
+
+  //   if (password !== confirmPassword) {
+  //     setError("Passwords do not match.");
+  //     setIsLoading(false);
+  //     return;
+  //   }
+
+  //   try {
+  //     // Replace with actual account creation logic
+  //     await new Promise((resolve) => setTimeout(resolve, 1000));
+  //     router.push("/HomePage"); // Redirect to HomePage after successful account creation
+  //   } catch (err) {
+  //     setError("Failed to create an account. Please try again.");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
-
+  
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       setIsLoading(false);
       return;
     }
-
-    if (mockUserDatabase[email]) {
-      setError("An account with this email already exists.");
-      setIsLoading(false);
-      return;
-    }
-
+  
     try {
-      // Simulate account creation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch("http://65.113.61.98:8080/api/auth/register/research-firm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          phoneNumber,
+          password,
+          firmName,
+          confirmPassword
 
-      // Add the new user to the mock database
-      mockUserDatabase[email] = { name, password };
-
-      // Redirect to HomePage with the user's name
-      router.push(`/HomePage?userName=${encodeURIComponent(name)}`);
-    } catch (err) {
-      setError("Failed to create an account. Please try again.");
+        }),
+      });
+      console.log(email, phoneNumber, password);
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Server error");
+      }
+  
+      router.push("/HomePage"); // Redirect on success
+    } catch (err: any) {
+      setError(err.message || "Failed to create an account. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
+  
 
-  const handleInterestChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
-    setInterests(selectedOptions);
+  const formatPhone = (value: string) => {
+    const cleaned = value.replace(/\D/g, ""); // remove all non-digits
+    const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+  
+    if (!match) return value;
+  
+    const [, area, prefix, line] = match;
+    if (prefix) {
+      return `(${area}) ${prefix}${line ? `-${line}` : ""}`;
+    }
+    if (area) {
+      return `(${area}`;
+    }
+    return value;
   };
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value.replace(/\D/g, "");
+    const formatted = formatPhone(e.target.value);
+  
+    setPhoneNumber(formatted);
+  
+    if (raw.length < 10) {
+      setPhoneError("Phone number must be 10 digits");
+    } else {
+      setPhoneError("");
+    }
+  };
+
+  const isValidEmail = (email: string): boolean => {
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return pattern.test(email);
+  };
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+  
+    if (value === "" || isValidEmail(value)) {
+      setEmailError("");
+    } else {
+      setEmailError("Please enter a valid email address.");
+    }
+  };
+  
+  
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <Head>
@@ -83,10 +150,10 @@ export default function NewUser() {
           </svg>
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Volunteer Profile Registration
+          Researcher Profile Registration
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Join TerpTrial and start earning while contributing to research
+          Join TerpTrial and start recruiting volunteers at no cost
         </p>
       </div>
 
@@ -131,111 +198,27 @@ export default function NewUser() {
               />
             </div>
 
+
+
             <div>
-              <label htmlFor="age" className="block text-sm font-medium text-gray-700">
-                Age
+              <label htmlFor="department" className="block text-sm font-medium text-gray-700">
+                Department
               </label>
               <input
-                id="age"
-                name="age"
-                type="number"
+                id="department"
+                name="department"
+                type="text"
                 required
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
+                value={firmName}
+                onChange={(e) => setDepartment(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Enter your age"
+                placeholder="Enter your department"
               />
             </div>
 
-            <div>
-              <label htmlFor="weight" className="block text-sm font-medium text-gray-700">
-                Weight (kg)
-              </label>
-              <input
-                id="weight"
-                name="weight"
-                type="number"
-                required
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Enter your weight"
-              />
-            </div>
+  
 
-            <div>
-              <label htmlFor="height" className="block text-sm font-medium text-gray-700">
-                Height (cm)
-              </label>
-              <input
-                id="height"
-                name="height"
-                type="number"
-                required
-                value={height}
-                onChange={(e) => setHeight(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Enter your height"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="dob" className="block text-sm font-medium text-gray-700">
-                Date of Birth
-              </label>
-              <input
-                id="dob"
-                name="dob"
-                type="date"
-                required
-                value={dob}
-                onChange={(e) => setDob(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-
-
-            <div>
-              <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
-                Gender
-              </label>
-              <select
-                id="gender"
-                name="gender"
-                required
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="interests" className="block text-sm font-medium text-black">
-                Interests
-              </label>
-              <select
-                id="interests"
-                name="interests"
-                required
-                value={interests[0] || ""} // Use the first selected interest or an empty string
-                onChange={(e) => setInterests([e.target.value])} // Update the state with the selected value
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              >
-                <option value="" className="text-black">Select an Interest</option> {/* Placeholder in black */}
-                <option value="Sleep Studies" className="text-black">Sleep Studies</option>
-                <option value="Nutrition" className="text-black">Nutrition</option>
-                <option value="Mental Health" className="text-black">Mental Health</option>
-                <option value="Exercise" className="text-black">Exercise</option>
-                <option value="Pharmaceutical Trials" className="text-black">Pharmaceutical Trials</option>
-              </select>
-            </div>
-
-            <div>
+            {/* <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                Email
               </label>
@@ -252,6 +235,30 @@ export default function NewUser() {
                   placeholder="youemail@gmail.com"
                 />
               </div>
+            </div> */}
+
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <div className="mt-1">
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={handleEmailChange}
+                  className={`appearance-none block w-full px-3 py-2 border ${
+                    emailError ? "border-red-500" : "border-gray-300"
+                  } rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                  placeholder="youremail@gmail.com"
+                />
+              </div>
+              {emailError && (
+                <p className="mt-1 text-sm text-red-600">{emailError}</p>
+              )}
             </div>
 
             <div>
@@ -289,6 +296,32 @@ export default function NewUser() {
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   placeholder="••••••••"
                 />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">
+               Phone Number
+              </label>
+              <div className="mt-1">
+                <input
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  type="tel"
+                  autoComplete="tel"
+                  inputMode="numeric"
+                  required
+                  value={phoneNumber}
+                  onChange={handlePhoneChange}
+                  className={`appearance-none block w-full px-3 py-2 border ${
+                  phoneError ? "border-red-500" : "border-gray-300"
+                  } rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                  placeholder="(123) 456-7890"
+                />
+{phoneError && (
+  <p className="mt-1 text-sm text-red-600">{phoneError}</p>
+)}
+
               </div>
             </div>
 
