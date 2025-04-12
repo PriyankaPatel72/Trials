@@ -14,6 +14,7 @@ export default function Home() {
     e.preventDefault();
     setIsLoading(true);
     setError("");
+<<<<<<< Updated upstream
 
     try {
       // Simulate authentication (replace with actual API call in the future)
@@ -27,6 +28,8 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
+=======
+>>>>>>> Stashed changes
   };
 
   return (
@@ -142,7 +145,7 @@ export default function Home() {
           <div className="mt-8 text-center">
             <p className="text-lg text-gray-700">
               New to TerpTrial?{" "}
-              <a href="/NewUser" className="font-bold text-red-600 hover:text-red-500">
+              <a href="/SelectUserType" className="font-bold text-red-600 hover:text-red-500">
                 Create an account
               </a>
             </p>
