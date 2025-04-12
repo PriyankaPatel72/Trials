@@ -14,7 +14,6 @@ export default function Home() {
     e.preventDefault();
     setIsLoading(true);
     setError("");
-<<<<<<< Updated upstream
 
     try {
       // Simulate authentication (replace with actual API call in the future)
@@ -28,8 +27,6 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
-=======
->>>>>>> Stashed changes
   };
 
   return (
