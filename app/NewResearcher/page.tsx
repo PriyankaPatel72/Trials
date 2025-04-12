@@ -50,7 +50,7 @@ export default function NewResearcher() {
     }
   
     try {
-      const response = await fetch("http://65.113.61.98:8080/api/auth/register/research-firm", {
+      const response = await fetch("https://09aa-65-113-61-98.ngrok-free.app/api/auth/register/research-firm", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
