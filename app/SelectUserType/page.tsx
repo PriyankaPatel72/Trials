@@ -27,7 +27,7 @@ export default function NavigationPage() {
             👤
           </div>
           <button
-            onClick={() => router.push("/NewUser")}
+            onClick={() => router.push("/NewResearcher")}
             className="w-full bg-green-600 text-white py-4 px-8 text-lg rounded-2xl hover:bg-green-700 transition"
           >
             Researcher
