@@ -1,6 +1,5 @@
 @import "tailwindcss";
-
-
+/* 
 :root {
  --background: #ffffff;
  --foreground: #171717;
@@ -35,8 +34,7 @@ body {
 
 
 .layout-container {
- margin: 0 auto;
- width: 100%;
- max-width: 28rem; /* Matches sm:max-w-md */
-}
-
+  margin: 0 auto;
+  width: 100%;
+  max-width: 28rem; /* Matches sm:max-w-md 
+} */
