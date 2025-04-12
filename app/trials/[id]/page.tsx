@@ -10,9 +10,15 @@ import { useEffect, useState } from "react";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 
-export default function TrialPage({ params }: { params: Promise<{ id: string }> }) {
-  const [trial, setTrial] = useState(null);
-  const [trialId, setTrialId] = useState<string | null>(null);
+export default function TrialPage({ params }: { params: { id: string } }) {
+  const [trial, setTrial] = useState<{
+    id: number;
+    title: string;
+    description: string;
+    compensation: number;
+    startDate: string;
+    eligibility: string;
+  } | null>(null);
 
   // Mock data (replace with actual API call or database query)
   const mockTrials = [
@@ -43,19 +49,10 @@ export default function TrialPage({ params }: { params: Promise<{ id: string }> 
   ];
 
   useEffect(() => {
-    // Unwrap the params Promise and set the trial ID
-    params.then((resolvedParams) => {
-      setTrialId(resolvedParams.id);
-    });
-  }, [params]);
-
-  useEffect(() => {
-    if (trialId) {
-      // Find the trial by ID
-      const foundTrial = mockTrials.find((t) => t.id === parseInt(trialId));
-      setTrial(foundTrial);
-    }
-  }, [trialId]);
+    // Find the trial by ID
+    const foundTrial = mockTrials.find((t) => t.id === parseInt(params.id));
+    setTrial(foundTrial || null);
+  }, [params.id]);
 
   if (!trial) {
     return (
@@ -71,7 +68,7 @@ export default function TrialPage({ params }: { params: Promise<{ id: string }> 
       <Header />
 
       <div className="flex-grow py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg border-2 border-black">
+        <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg border-4 border-black">
           <h1 className="text-4xl font-bold text-black">{trial.title}</h1>
           <p className="text-lg text-gray-700 mt-4">{trial.description}</p>
           <p className="text-lg text-green-600 mt-4">
@@ -94,13 +91,13 @@ export default function TrialPage({ params }: { params: Promise<{ id: string }> 
           <div className="flex space-x-4 mt-6">
             <button
               onClick={() => alert("Application submitted!")}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition border-2 border-black text-lg"
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition border-4 border-black text-lg"
             >
               Submit Application
             </button>
             <button
               onClick={() => (window.location.href = "/HomePage")}
-              className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition border-2 border-black text-lg"
+              className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition border-4 border-black text-lg"
             >
               Back to Home
             </button>

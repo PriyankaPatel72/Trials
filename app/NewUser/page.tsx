@@ -2,7 +2,6 @@
 import { useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import { mockUserDatabase } from "../../mockDatabase"; // Import the mock database
 
 export default function NewUser() {
   const [email, setEmail] = useState("");
@@ -32,18 +31,9 @@ export default function NewUser() {
       return;
     }
 
-    if (mockUserDatabase[email]) {
-      setError("An account with this email already exists.");
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      // Simulate account creation
+      // Simulate account creation (replace with actual API call in the future)
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Add the new user to the mock database
-      mockUserDatabase[email] = { name, password };
 
       // Redirect to HomePage with the user's name
       router.push(`/HomePage?userName=${encodeURIComponent(name)}`);
@@ -52,11 +42,6 @@ export default function NewUser() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleInterestChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
-    setInterests(selectedOptions);
   };
 
   return (
@@ -196,116 +181,51 @@ export default function NewUser() {
             </div>
 
             <div>
-              <label htmlFor="department" className="block text-sm font-medium text-gray-700">
-                Department
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email
               </label>
               <input
-                id="department"
-                name="department"
-                type="text"
+                id="email"
+                name="email"
+                type="email"
                 required
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Enter your department"
+                placeholder="Enter your email"
               />
-            </div>
-
-            <div>
-              <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
-                Gender
-              </label>
-              <select
-                id="gender"
-                name="gender"
-                required
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="interests" className="block text-sm font-medium text-black">
-                Interests
-              </label>
-              <select
-                id="interests"
-                name="interests"
-                required
-                value={interests[0] || ""} // Use the first selected interest or an empty string
-                onChange={(e) => setInterests([e.target.value])} // Update the state with the selected value
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              >
-                <option value="" className="text-black">Select an Interest</option> {/* Placeholder in black */}
-                <option value="Sleep Studies" className="text-black">Sleep Studies</option>
-                <option value="Nutrition" className="text-black">Nutrition</option>
-                <option value="Mental Health" className="text-black">Mental Health</option>
-                <option value="Exercise" className="text-black">Exercise</option>
-                <option value="Pharmaceutical Trials" className="text-black">Pharmaceutical Trials</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-               Email
-              </label>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="youemail@gmail.com"
-                />
-              </div>
             </div>
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="••••••••"
-                />
-              </div>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Enter your password"
+              />
             </div>
 
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
                 Confirm Password
               </label>
-              <div className="mt-1">
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="••••••••"
-                />
-              </div>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Confirm your password"
+              />
             </div>
 
             <div>
@@ -316,33 +236,7 @@ export default function NewUser() {
                   isLoading ? "opacity-70 cursor-not-allowed" : ""
                 }`}
               >
-                {isLoading ? (
-                  <>
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Creating account...
-                  </>
-                ) : (
-                  "Create Account"
-                )}
+                {isLoading ? "Creating account..." : "Create Account"}
               </button>
             </div>
           </form>
