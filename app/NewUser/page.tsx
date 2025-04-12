@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
+import { mockUserDatabase } from "../../mockDatabase"; // Import the mock database
 
 export default function NewUser() {
   const [email, setEmail] = useState("");
@@ -31,10 +32,21 @@ export default function NewUser() {
       return;
     }
 
+    if (mockUserDatabase[email]) {
+      setError("An account with this email already exists.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      // Replace with actual account creation logic
+      // Simulate account creation
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/HomePage"); // Redirect to HomePage after successful account creation
+
+      // Add the new user to the mock database
+      mockUserDatabase[email] = { name, password };
+
+      // Redirect to HomePage with the user's name
+      router.push(`/HomePage?userName=${encodeURIComponent(name)}`);
     } catch (err) {
       setError("Failed to create an account. Please try again.");
     } finally {
