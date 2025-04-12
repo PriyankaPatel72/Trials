@@ -2,10 +2,6 @@
 import { useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 
 export default function NewUser() {
   const [email, setEmail] = useState("");
@@ -34,19 +30,13 @@ export default function NewUser() {
       return;
     }
 
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
     try {
       // Simulate account creation (replace with actual API call in the future)
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-<<<<<<< Updated upstream
-=======
       
 
->>>>>>> Stashed changes
       // Redirect to HomePage with the user's name
       router.push(`/HomePage?userName=${encodeURIComponent(name)}`);
     } catch (err) {
