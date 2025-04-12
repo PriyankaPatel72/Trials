@@ -30,6 +30,33 @@ export default function HomePageTrialRunner() {
         <meta name="description" content="Manage your clinical trial and participants" />
       </Head>
 
+      {/* Navigation Bar */}
+      <nav className="bg-red-600 shadow-md border-b-4 border-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <a href="/HomePageTrialRunner" className="text-2xl font-bold text-white">
+                TerpTrials
+              </a>
+            </div>
+            <div className="flex space-x-4">
+              <a href="/TrialDataForm" className="text-lg text-white hover:text-yellow-300">
+                Post a Trial
+              </a>
+              <a href="/HomePageTrialRunner" className="text-lg text-white hover:text-yellow-300">
+                Manage Participants
+              </a>
+              <a href="/HomePage" className="text-lg text-white hover:text-yellow-300">
+                View Trials
+              </a>
+              <a href="/NewUser" className="text-lg text-white hover:text-yellow-300">
+                Profile
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
       {/* Header Component */}
       <Header />
 
