@@ -13,7 +13,6 @@ export default function NewUser() {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [dob, setDob] = useState("");
-  const [department, setDepartment] = useState("");
   const [gender, setGender] = useState("");
   const [interests, setInterests] = useState<string[]>([]);
   const [error, setError] = useState("");
@@ -180,6 +179,7 @@ export default function NewUser() {
               />
             </div>
 
+<<<<<<< HEAD
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email
@@ -195,6 +195,8 @@ export default function NewUser() {
                 placeholder="Enter your email"
               />
             </div>
+=======
+>>>>>>> d7922967192c8ec5cd12705891e6a28a99dd788e
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
