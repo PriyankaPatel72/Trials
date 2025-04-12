@@ -30,9 +30,12 @@ export default function NewUser() {
       return;
     }
 
+
     try {
       // Simulate account creation (replace with actual API call in the future)
       await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      
 
       // Redirect to HomePage with the user's name
       router.push(`/HomePage?userName=${encodeURIComponent(name)}`);
