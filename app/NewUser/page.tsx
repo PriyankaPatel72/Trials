@@ -49,7 +49,6 @@ export default function NewUser() {
           departmentName,
           password,
           confirmPassword,
-          isVolunteer,
         }),
       });
 
@@ -58,7 +57,10 @@ export default function NewUser() {
         throw new Error(data.message || "Server error");
       }
 
-      router.push("/HomePage"); // Redirect on success
+      const data = await response.json();
+      localStorage.setItem("userId", data.id); // Store user ID in localStorage
+      localStorage.setItem("userType", "volunteer"); // Store user type
+      router.push("/HomePage"); // Redirect to Volunteer Homepage
     } catch (err: any) {
       setError(err.message || "Failed to create an account. Please try again.");
     } finally {

@@ -62,9 +62,9 @@ export default function TrialDataForm() {
               <Link href="/HomePageTrialRunner" className="text-lg text-white hover:text-yellow-300 transition">
                 Manage Trials
               </Link>
-              <Link href="/NewUser" className="text-lg text-white hover:text-yellow-300 transition">
+                <Link href="/VolunteerProfile" className="text-lg text-white hover:text-yellow-300 transition">
                 Profile
-              </Link>
+                </Link>
             </div>
           </div>
         </div>

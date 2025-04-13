@@ -10,7 +10,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -24,8 +23,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           email,
-          password
-
+          password,
         }),
       });
 
@@ -33,20 +31,18 @@ export default function Home() {
         const data = await response.json();
         throw new Error(data.message || "Server error");
       }
-      else{
-        const volunteer = await response.body;
-        if (volunteer) {
-          router.push("/HomePage"); // Redirect on success
-        }
-        if (!volunteer) {
-          router.push("/HomePageTrialRunner");
-        }
+
+      const data = await response.json();
+      localStorage.setItem("userId", data.id); // Store user ID in localStorage
+      localStorage.setItem("userType", data.isVolunteer ? "volunteer" : "researcher"); // Store user type
+
+      if (data.isVolunteer) {
+        router.push("/HomePage"); // Redirect to Volunteer Homepage
+      } else {
+        router.push("/HomePageTrialRunner"); // Redirect to Researcher Homepage
       }
-
-  
-
     } catch (err: any) {
-      setError(err.message || "Failed to create an account. Please try again.");
+      setError(err.message || "Failed to log in. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -162,16 +158,30 @@ export default function Home() {
             </div>
           </form>
 
-          <div className="mt-8 text-center">
+            <div className="mt-8 text-center">
             <p className="text-lg text-gray-700">
               New to TerpTrial?{" "}
               <a href="/SelectUserType" className="font-bold text-red-600 hover:text-red-500">
-                Create an account
+              Create an account
               </a>
             </p>
+            </div>
+
+            <div className="mt-8 text-center">
+            <a
+              href={
+                localStorage.getItem("userType") === "volunteer"
+                  ? `/VolunteerProfile/${localStorage.getItem("userId")}`
+                  : "/HomePageTrialRunner"
+              }
+              className="text-lg text-red-600 hover:text-red-500 transition"
+            >
+              Profile
+            </a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    
   );
 }
