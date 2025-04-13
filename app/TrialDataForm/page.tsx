@@ -85,7 +85,7 @@ export default function TrialDataForm() {
               </Link>
             </div>
             <div className="flex space-x-4">
-              <Link href="/HomePage" className="text-lg text-white hover:text-yellow-300 transition">
+              <Link href="/HomePageTrialRunner" className="text-lg text-white hover:text-yellow-300 transition">
                 Home
               </Link>
               <Link href="/TrialDataForm" className="text-lg text-white hover:text-yellow-300 transition">

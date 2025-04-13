@@ -58,7 +58,7 @@ export default function Home() {
           router.push("/HomePage");
         } else if (volunteerStatus === "firm") {
           console.log("User is a researcher");
-          router.push("/HomePageTrialRunner");
+          router.push("/TrialDataForm");
         }
       })
       .catch((err) => {
