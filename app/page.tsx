@@ -1,5 +1,4 @@
-"use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
 
@@ -8,7 +7,22 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [userLink, setUserLink] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Safely access localStorage only on the client side
+      const userType = localStorage.getItem("userType");
+      const userId = localStorage.getItem("userId");
+      
+      if (userType && userId) {
+        setUserLink(userType === "volunteer" 
+          ? `/VolunteerProfile/${userId}`
+          : "/HomePageTrialRunner");
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,8 +47,11 @@ export default function Home() {
       }
 
       const data = await response.json();
-      localStorage.setItem("userId", data.id); // Store user ID in localStorage
-      localStorage.setItem("userType", data.isVolunteer ? "volunteer" : "researcher"); // Store user type
+      
+      if (typeof window !== "undefined") {
+        localStorage.setItem("userId", data.id); // Store user ID in localStorage
+        localStorage.setItem("userType", data.isVolunteer ? "volunteer" : "researcher"); // Store user type
+      }
 
       if (data.isVolunteer) {
         router.push("/HomePage"); // Redirect to Volunteer Homepage
@@ -47,7 +64,7 @@ export default function Home() {
       setIsLoading(false);
     }
   };
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-yellow-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <Head>
@@ -149,39 +166,31 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-lg text-lg font-bold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${
-                  isLoading ? "opacity-70 cursor-not-allowed" : ""
-                }`}
+                className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-lg text-lg font-bold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${isLoading ? "opacity-70 cursor-not-allowed" : ""}`}
               >
                 {isLoading ? "Signing in..." : "Sign in"}
               </button>
             </div>
           </form>
 
-            <div className="mt-8 text-center">
+          <div className="mt-8 text-center">
             <p className="text-lg text-gray-700">
               New to TerpTrial?{" "}
               <a href="/SelectUserType" className="font-bold text-red-600 hover:text-red-500">
-              Create an account
+                Create an account
               </a>
             </p>
-            </div>
+          </div>
 
-            <div className="mt-8 text-center">
+          <div className="mt-8 text-center">
             <a
-              href={
-                localStorage.getItem("userType") === "volunteer"
-                  ? `/VolunteerProfile/${localStorage.getItem("userId")}`
-                  : "/HomePageTrialRunner"
-              }
+              href={userLink}  {/* Use the dynamically set link */}
               className="text-lg text-red-600 hover:text-red-500 transition"
             >
-              Profile
             </a>
-            </div>
           </div>
         </div>
       </div>
-    
+    </div>
   );
 }
