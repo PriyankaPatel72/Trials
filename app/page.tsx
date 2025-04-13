@@ -67,7 +67,7 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-yellow-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
