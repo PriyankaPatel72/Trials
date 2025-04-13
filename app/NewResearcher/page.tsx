@@ -15,7 +15,6 @@ export default function NewResearcher() {
   const [firmName, setFirmName] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-const [userId, setUserId] = useState(""); // Store the user ID after registration
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -114,40 +113,8 @@ const [userId, setUserId] = useState(""); // Store the user ID after registratio
         <meta name="description" content="Sign up to recruit volunteers for clinical trials" />
       </Head>
 
-      {/* Sticky Navigation Bar */}
-      <nav className="bg-red-600 shadow-lg border-b-4 border-black sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <a href="/HomePage" className="text-2xl font-bold text-white">
-                TerpTrials
-              </a>
-            </div>
-            <div className="flex space-x-4">
-              <a href="/HomePage" className="text-lg text-white hover:text-yellow-300 transition">
-                Home
-              </a>
-              <a href="/TrialDataForm" className="text-lg text-white hover:text-yellow-300 transition">
-                Post a Trial
-              </a>
-              <a href="/HomePageTrialRunner" className="text-lg text-white hover:text-yellow-300 transition">
-                Manage Trials
-              </a>
-              {/* Dynamically link to the Volunteer Profile page */}
-              <a
-                href={
-                  localStorage.getItem("userType") === "volunteer"
-                    ? `/VolunteerProfile/${localStorage.getItem("userId")}`
-                    : "/HomePageTrialRunner"
-                }
-                className="text-lg text-white hover:text-yellow-300 transition"
-              >
-                Profile
-              </a>
-            </div>
-          </div>
-        </div>
-      </nav>
+      {/* Red Bar at the Top */}
+      <div className="w-full h-4 bg-red-600"></div>
 
       {/* Main Content */}
       <main className="flex-grow flex flex-col justify-center py-12 sm:px-6 lg:px-8">

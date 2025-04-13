@@ -75,32 +75,8 @@ export default function NewUser() {
         <meta name="description" content="Sign up to participate in clinical trials" />
       </Head>
 
-      {/* Sticky Navigation Bar */}
-      <nav className="bg-red-600 shadow-lg border-b-4 border-black sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <a href="/HomePage" className="text-2xl font-bold text-white">
-                TerpTrials
-              </a>
-            </div>
-            <div className="flex space-x-4">
-              <a href="/HomePage" className="text-lg text-white hover:text-yellow-300 transition">
-                Home
-              </a>
-              <a href="/TrialDataForm" className="text-lg text-white hover:text-yellow-300 transition">
-                Post a Trial
-              </a>
-              <a href="/HomePageTrialRunner" className="text-lg text-white hover:text-yellow-300 transition">
-                Manage Trials
-              </a>
-              <a href="/NewUser" className="text-lg text-white hover:text-yellow-300 transition">
-                Profile
-              </a>
-            </div>
-          </div>
-        </div>
-      </nav>
+      {/* Red Bar at the Top */}
+      <div className="w-full h-4 bg-red-600"></div>
 
       {/* Main Content */}
       <main className="flex-grow flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -130,7 +106,7 @@ export default function NewUser() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-2xl">
-          <div className="bg-white py-10 px-8 shadow-2xl rounded-2xl border-5 border-black">
+          <div className="bg-white py-10 px-8 shadow-2xl rounded-2xl border-6 border-black">
             <form className="space-y-8" onSubmit={handleSubmit}>
               {error && (
                 <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
@@ -139,186 +115,188 @@ export default function NewUser() {
               )}
 
               {/* Form Fields */}
-              <div>
-                <label htmlFor="firstName" className="block text-lg font-medium text-gray-700">
-                  First Name
-                </label>
-                <input
-                  id="firstName"
-                  name="firstName"
-                  type="text"
-                  required
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
-                  placeholder="Enter your first name"
-                />
-              </div>
+              <div className="space-y-8">
+                <div className="border-2 border-black p-4 rounded-lg">
+                  <label htmlFor="firstName" className="block text-lg font-medium text-gray-700">
+                    First Name
+                  </label>
+                  <input
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    required
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
+                    placeholder="Enter your first name"
+                  />
+                </div>
 
-              <div>
-                <label htmlFor="lastName" className="block text-lg font-medium text-gray-700">
-                  Last Name
-                </label>
-                <input
-                  id="lastName"
-                  name="lastName"
-                  type="text"
-                  required
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
-                  placeholder="Enter your last name"
-                />
-              </div>
+                <div className="border-2 border-black p-4 rounded-lg">
+                  <label htmlFor="lastName" className="block text-lg font-medium text-gray-700">
+                    Last Name
+                  </label>
+                  <input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    required
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
+                    placeholder="Enter your last name"
+                  />
+                </div>
 
-              <div>
-                <label htmlFor="email" className="block text-lg font-medium text-gray-700">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
-                  placeholder="Enter your email"
-                />
-              </div>
+                <div className="border-2 border-black p-4 rounded-lg">
+                  <label htmlFor="email" className="block text-lg font-medium text-gray-700">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
+                    placeholder="Enter your email"
+                  />
+                </div>
 
-              <div>
-                <label htmlFor="password" className="block text-lg font-medium text-gray-700">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
-                  placeholder="Enter your password"
-                />
-              </div>
+                <div className="border-2 border-black p-4 rounded-lg">
+                  <label htmlFor="password" className="block text-lg font-medium text-gray-700">
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
+                    placeholder="Enter your password"
+                  />
+                </div>
 
-              <div>
-                <label htmlFor="confirmPassword" className="block text-lg font-medium text-gray-700">
-                  Confirm Password
-                </label>
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
-                  placeholder="Confirm your password"
-                />
-              </div>
+                <div className="border-2 border-black p-4 rounded-lg">
+                  <label htmlFor="confirmPassword" className="block text-lg font-medium text-gray-700">
+                    Confirm Password
+                  </label>
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
+                    placeholder="Confirm your password"
+                  />
+                </div>
 
-              <div>
-                <label htmlFor="departmentName" className="block text-lg font-medium text-gray-700">
-                  Department
-                </label>
-                <input
-                  id="departmentName"
-                  name="departmentName"
-                  type="text"
-                  required
-                  value={departmentName}
-                  onChange={(e) => setDepartmentName(e.target.value)}
-                  className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
-                  placeholder="Enter your department"
-                />
-              </div>
+                <div className="border-2 border-black p-4 rounded-lg">
+                  <label htmlFor="departmentName" className="block text-lg font-medium text-gray-700">
+                    Department
+                  </label>
+                  <input
+                    id="departmentName"
+                    name="departmentName"
+                    type="text"
+                    required
+                    value={departmentName}
+                    onChange={(e) => setDepartmentName(e.target.value)}
+                    className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
+                    placeholder="Enter your department"
+                  />
+                </div>
 
-              <div>
-                <label htmlFor="dateOfBirth" className="block text-lg font-medium text-gray-700">
-                  Date of Birth
-                </label>
-                <input
-                  id="dateOfBirth"
-                  name="dateOfBirth"
-                  type="date"
-                  required
-                  value={dateOfBirth}
-                  onChange={(e) => setDateOfBirth(e.target.value)}
-                  className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
-                />
-              </div>
+                <div className="border-2 border-black p-4 rounded-lg">
+                  <label htmlFor="dateOfBirth" className="block text-lg font-medium text-gray-700">
+                    Date of Birth
+                  </label>
+                  <input
+                    id="dateOfBirth"
+                    name="dateOfBirth"
+                    type="date"
+                    required
+                    value={dateOfBirth}
+                    onChange={(e) => setDateOfBirth(e.target.value)}
+                    className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
+                  />
+                </div>
 
-              <div>
-                <label htmlFor="weight" className="block text-lg font-medium text-gray-700">
-                  Weight (kg)
-                </label>
-                <input
-                  id="weight"
-                  name="weight"
-                  type="number"
-                  required
-                  value={weight}
-                  onChange={(e) => setWeight(e.target.value)}
-                  className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
-                  placeholder="Enter your weight"
-                />
-              </div>
+                <div className="border-2 border-black p-4 rounded-lg">
+                  <label htmlFor="weight" className="block text-lg font-medium text-gray-700">
+                    Weight (kg)
+                  </label>
+                  <input
+                    id="weight"
+                    name="weight"
+                    type="number"
+                    required
+                    value={weight}
+                    onChange={(e) => setWeight(e.target.value)}
+                    className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
+                    placeholder="Enter your weight"
+                  />
+                </div>
 
-              <div>
-                <label htmlFor="height" className="block text-lg font-medium text-gray-700">
-                  Height (cm)
-                </label>
-                <input
-                  id="height"
-                  name="height"
-                  type="number"
-                  required
-                  value={height}
-                  onChange={(e) => setHeight(e.target.value)}
-                  className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
-                  placeholder="Enter your height"
-                />
-              </div>
+                <div className="border-2 border-black p-4 rounded-lg">
+                  <label htmlFor="height" className="block text-lg font-medium text-gray-700">
+                    Height (cm)
+                  </label>
+                  <input
+                    id="height"
+                    name="height"
+                    type="number"
+                    required
+                    value={height}
+                    onChange={(e) => setHeight(e.target.value)}
+                    className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
+                    placeholder="Enter your height"
+                  />
+                </div>
 
-              <div>
-                <label htmlFor="gender" className="block text-lg font-medium text-gray-700">
-                  Gender
-                </label>
-                <input
-                  id="gender"
-                  name="gender"
-                  type="text"
-                  required
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                  className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
-                  placeholder="Enter your gender"
-                />
-              </div>
+                <div className="border-2 border-black p-4 rounded-lg">
+                  <label htmlFor="gender" className="block text-lg font-medium text-gray-700">
+                    Gender
+                  </label>
+                  <input
+                    id="gender"
+                    name="gender"
+                    type="text"
+                    required
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
+                    placeholder="Enter your gender"
+                  />
+                </div>
 
-              <div>
-                <label htmlFor="interests" className="block text-lg font-medium text-gray-700">
-                  Interests
-                </label>
-                <input
-                  id="interests"
-                  name="interests"
-                  type="text"
-                  required
-                  value={interests}
-                  onChange={(e) => setInterests(e.target.value)}
-                  className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
-                  placeholder="Enter your interests"
-                />
+                <div className="border-2 border-black p-4 rounded-lg">
+                  <label htmlFor="interests" className="block text-lg font-medium text-gray-700">
+                    Interests
+                  </label>
+                  <input
+                    id="interests"
+                    name="interests"
+                    type="text"
+                    required
+                    value={interests}
+                    onChange={(e) => setInterests(e.target.value)}
+                    className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
+                    placeholder="Enter your interests"
+                  />
+                </div>
               </div>
 
               <div>
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`w-full flex justify-center py-3 px-6 border border-transparent rounded-lg shadow-lg text-lg font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${
+                  className={`w-full flex justify-center py-3 px-2 border border-transparent rounded-lg shadow-lg text-lg font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${
                     isLoading ? "opacity-70 cursor-not-allowed" : ""
                   }`}
                 >
