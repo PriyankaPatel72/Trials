@@ -10,25 +10,65 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+  //   setError("");
+
+  //   try {
+  //     // Simulate authentication (replace with actual API call in the future)
+  //     await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  //     // Simulate successful login
+  //     const userName = "John Doe"; // Replace with actual user data from backend
+  //     router.push(`/HomePage?userName=${encodeURIComponent(userName)}`);
+  //   } catch (err) {
+  //     setError("Invalid email or password. Please try again.");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
     try {
-      // Simulate authentication (replace with actual API call in the future)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch("http://localhost:8085/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password
 
-      // Simulate successful login
-      const userName = "John Doe"; // Replace with actual user data from backend
-      router.push(`/HomePage?userName=${encodeURIComponent(userName)}`);
-    } catch (err) {
-      setError("Invalid email or password. Please try again.");
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Server error");
+      }
+      else{
+        const volunteer = await response.body;
+        if (volunteer) {
+          router.push("/HomePage"); // Redirect on success
+        }
+        if (!volunteer) {
+          router.push("/HomePageTrialRunner");
+        }
+      }
+
+  
+
+    } catch (err: any) {
+      setError(err.message || "Failed to create an account. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-yellow-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <Head>

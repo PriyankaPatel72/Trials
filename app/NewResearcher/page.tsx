@@ -15,6 +15,7 @@ export default function NewResearcher() {
   const [firmName, setDepartment] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const isVolunteer = false
   const router = useRouter();
 
   // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -50,7 +51,8 @@ export default function NewResearcher() {
     }
   
     try {
-      const response = await fetch("https://09aa-65-113-61-98.ngrok-free.app/api/auth/register/research-firm", {
+      const username = "testuser"
+      const response = await fetch("http://localhost:8085/api/auth/register/research-firm", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,8 +62,9 @@ export default function NewResearcher() {
           phoneNumber,
           password,
           firmName,
-          confirmPassword
-
+          confirmPassword,
+          username,
+          isVolunteer
         }),
       });
       console.log(email, phoneNumber, password);

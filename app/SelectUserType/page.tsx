@@ -42,7 +42,7 @@ export default function NavigationPage({ userName }: { userName?: string | null 
               🧪 {/* UMD-themed icon for Researcher */}
             </div>
             <button
-              onClick={() => router.push("/NewUser")}
+              onClick={() => router.push("/NewResearcher")}
               className="w-full bg-yellow-500 text-white py-4 px-8 text-2xl rounded-2xl hover:bg-yellow-600 transition border-4 border-black shadow-md"
             >
               I am a Researcher
