@@ -72,9 +72,9 @@ export default function HomePageTrialRunner() {
               <Link href="/HomePage" className="text-lg text-white hover:text-yellow-300 transition">
                 View Trials
               </Link>
-              <Link href="/NewUser" className="text-lg text-white hover:text-yellow-300 transition">
+                <Link href={`/VolunteerProfile/${completedParticipants[0]?.id || ""}`} className="text-lg text-white hover:text-yellow-300 transition">
                 Profile
-              </Link>
+                </Link>
             </div>
           </div>
         </div>
