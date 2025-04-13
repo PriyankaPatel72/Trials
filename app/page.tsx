@@ -10,24 +10,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   setIsLoading(true);
-  //   setError("");
-
-  //   try {
-  //     // Simulate authentication (replace with actual API call in the future)
-  //     await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  //     // Simulate successful login
-  //     const userName = "John Doe"; // Replace with actual user data from backend
-  //     router.push(`/HomePage?userName=${encodeURIComponent(userName)}`);
-  //   } catch (err) {
-  //     setError("Invalid email or password. Please try again.");
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
