@@ -21,7 +21,7 @@ export default function HomePageTrialRunner() {
         email: "johndoe@example.com",
         completed: true,
         message:
-          "I am a college student interested in sleep studies and how they impact academic performance. I have participated in similar studies before and am eager to contribute further.  he hello wasappp i am so tiredddd",
+          "I am a college student interested in sleep studies and how they impact academic performance. I have participated in similar studies before and am eager to contribute further.",
       },
       {
         id: "456",
@@ -66,15 +66,9 @@ export default function HomePageTrialRunner() {
               <Link href="/TrialDataForm" className="text-lg text-white hover:text-yellow-300 transition">
                 Post a Trial
               </Link>
-              <Link href="/HomePageTrialRunner" className="text-lg text-white hover:text-yellow-300 transition">
-                Manage Participants
-              </Link>
               <Link href="/HomePage" className="text-lg text-white hover:text-yellow-300 transition">
                 View Trials
               </Link>
-                <Link href={`/VolunteerProfile/${completedParticipants[0]?.id || ""}`} className="text-lg text-white hover:text-yellow-300 transition">
-                Profile
-                </Link>
             </div>
           </div>
         </div>
