@@ -1,32 +1,71 @@
 "use client";
 import React, { useState } from "react";
 import Head from "next/head";
+import { useRouter } from "next/navigation";
+
 
 export default function HomePagePoster() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [eligibility, setEligibility] = useState("");
-  const [compensation, setCompensation] = useState("");
+  const [ageRange, setEligibility] = useState("");
+  const [paidOrUnpaid, setCompensation] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const allowExtraRequirements = false;
+  const router = useRouter();
+  
+  
+  
+  
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
-    if (!title || !description || !eligibility || !compensation || !startDate || !endDate) {
+    if (!title || !description || !ageRange || !paidOrUnpaid|| !startDate || !endDate) {
       setError("All fields are required.");
       setIsLoading(false);
       return;
     }
 
     try {
-      // Replace with actual logic to post the advertisement
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      alert("Clinical trial advertisement posted successfully!");
+      
+        const response = await fetch("http://localhost:8085/api/postings?researchFirmId=67fb090ca71e20e5ab7efa31", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title,
+            description,
+            paidOrUnpaid,
+            ageRange,
+            allowExtraRequirements,
+            startDate,
+            endDate
+
+            
+  
+          }),
+        });
+  
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.message || "Server error");
+        }
+        else{
+          const volunteer = await response.body;
+          if (volunteer) {
+            router.push("/HomePage"); // Redirect on success
+          }
+          if (!volunteer) {
+            router.push("/HomePageTrialRunner");
+          }
+        }
     } catch (err) {
       setError("Failed to post the advertisement. Please try again.");
     } finally {
@@ -115,7 +154,7 @@ export default function HomePagePoster() {
                 id="eligibility"
                 name="eligibility"
                 required
-                value={eligibility}
+                value={ageRange}
                 onChange={(e) => setEligibility(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 placeholder="List the eligibility criteria for participants"
@@ -132,7 +171,7 @@ export default function HomePagePoster() {
                 name="compensation"
                 type="text"
                 required
-                value={compensation}
+                value={paidOrUnpaid}
                 onChange={(e) => setCompensation(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 placeholder="Enter the compensation amount or details"
