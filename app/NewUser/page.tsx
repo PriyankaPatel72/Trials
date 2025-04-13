@@ -7,15 +7,18 @@ export default function NewUser() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [name, setName] = useState("");
+  const [firstName, setName] = useState("");
+  const [departmentName, setDepartmentName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [age, setAge] = useState("");
+  const [dateOfBirth, setDateofBirth] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [dob, setDob] = useState("");
+  const [username, setUsername] = useState("");
   const [gender, setGender] = useState("");
-  const [interests, setInterests] = useState<string[]>([]);
+  const [interests, setInterests] = useState("");
   const [error, setError] = useState("");
+  const isVolunteer = true; 
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -29,21 +32,44 @@ export default function NewUser() {
       setIsLoading(false);
       return;
     }
-
-
     try {
-      // Simulate account creation (replace with actual API call in the future)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch("http://localhost:8085/api/auth/register/volunteer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          firstName,
+          lastName,
+          gender,
+          dateOfBirth,
+          weight,
+          height,
+          //interests,
+          username,
+          departmentName,
+          password,
+          confirmPassword,
+          isVolunteer
 
-      
+        }),
+      });
 
-      // Redirect to HomePage with the user's name
-      router.push(`/HomePage?userName=${encodeURIComponent(name)}`);
-    } catch (err) {
-      setError("Failed to create an account. Please try again.");
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Server error");
+      }
+
+  
+      router.push("/HomePage"); // Redirect on success
+    } catch (err: any) {
+      setError(err.message || "Failed to create an account. Please try again.");
     } finally {
       setIsLoading(false);
     }
+
+
   };
 
   return (
@@ -96,7 +122,7 @@ export default function NewUser() {
                 name="name"
                 type="text"
                 required
-                value={name}
+                value={firstName}
                 onChange={(e) => setName(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 placeholder="Enter your first name"
@@ -120,18 +146,34 @@ export default function NewUser() {
             </div>
 
             <div>
-              <label htmlFor="age" className="block text-sm font-medium text-gray-700">
-                Age
+              <label htmlFor="department" className="block text-sm font-medium text-gray-700">
+                Department
               </label>
               <input
-                id="age"
-                name="age"
-                type="number"
+                id="department"
+                name="department"
+                type="text"
                 required
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Enter your age"
+                value={departmentName}
+                onChange={(e) => setDepartmentName(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+
+            
+
+            <div>
+              <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
+                Gender
+              </label>
+              <input
+                id="gender"
+                name="gender"
+                type="text"
+                required
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
 
@@ -174,10 +216,25 @@ export default function NewUser() {
               <input
                 id="dob"
                 name="dob"
-                type="date"
+                type="text"
                 required
-                value={dob}
-                onChange={(e) => setDob(e.target.value)}
+                value={dateOfBirth}
+                onChange={(e) => setDateofBirth(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="interests" className="block text-sm font-medium text-gray-700">
+                Interests
+              </label>
+              <input
+                id="interests"
+                name="interests"
+                type="text"
+                required
+                value={interests}
+                onChange={(e) => setInterests(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
