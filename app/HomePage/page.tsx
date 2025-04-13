@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
@@ -39,6 +39,14 @@ export default function HomePage() {
   ];
 
   const [filteredTrials, setFilteredTrials] = useState(mockTrials);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Retrieve the current user's ID from localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setUserId(localStorage.getItem("userId"));
+    }
+  }, []);
 
   // Calculate total compensation available
   const totalCompensation = filteredTrials.reduce((sum, trial) => sum + trial.compensation, 0);
@@ -55,7 +63,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <a href="/" className="text-2xl font-bold text-white">
+              <a href="/HomePage" className="text-2xl font-bold text-white">
                 UMD TerpTrials
               </a>
             </div>
@@ -63,13 +71,10 @@ export default function HomePage() {
               <a href="/HomePage" className="text-lg text-white hover:text-yellow-300 transition">
                 Home
               </a>
-              <a href="/TrialDataForm" className="text-lg text-white hover:text-yellow-300 transition">
-                Post a Trial
-              </a>
-              <a href="/HomePageTrialRunner" className="text-lg text-white hover:text-yellow-300 transition">
-                Manage Trials
-              </a>
-              <a href="/NewUser" className="text-lg text-white hover:text-yellow-300 transition">
+              <a
+                href={userId ? `/VolunteerProfile/${userId}` : "#"}
+                className="text-lg text-white hover:text-yellow-300 transition"
+              >
                 Profile
               </a>
             </div>
