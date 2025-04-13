@@ -14,9 +14,32 @@ export default function HomePageTrialRunner() {
     endDate: "2025-06-30",
     compensation: "$500",
     participants: [
-      { id: "123", name: "John Doe", age: 22, email: "johndoe@example.com", completed: true },
-      { id: "456", name: "Jane Smith", age: 25, email: "janesmith@example.com", completed: true },
-      { id: "789", name: "Alex Johnson", age: 23, email: "alexjohnson@example.com", completed: false },
+      {
+        id: "123",
+        name: "John Doe",
+        age: 22,
+        email: "johndoe@example.com",
+        completed: true,
+        message:
+          "I am a college student interested in sleep studies and how they impact academic performance. I have participated in similar studies before and am eager to contribute further.  he hello wasappp i am so tiredddd",
+      },
+      {
+        id: "456",
+        name: "Jane Smith",
+        age: 25,
+        email: "janesmith@example.com",
+        completed: true,
+        message:
+          "I have a passion for research and want to contribute to studies on mental health and sleep. I believe my background in biology will be helpful for this study.",
+      },
+      {
+        id: "789",
+        name: "Alex Johnson",
+        age: 23,
+        email: "alexjohnson@example.com",
+        completed: false,
+        message: "",
+      },
     ],
   };
 
@@ -67,20 +90,20 @@ export default function HomePageTrialRunner() {
           <p className="text-lg text-gray-700 mb-8 text-left">{trial.description}</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <div>
-              <p className="text-sm font-medium text-gray-500">Start Date</p>
-              <p className="text-lg font-semibold text-black">{trial.startDate}</p>
+              <p className="text-xl font-medium text-gray-500">Start Date</p>
+              <p className="text-xl font-semibold text-black">{trial.startDate}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500">End Date</p>
-              <p className="text-lg font-semibold text-black">{trial.endDate}</p>
+              <p className="text-xl font-medium text-gray-500">End Date</p>
+              <p className="text-xl font-semibold text-black">{trial.endDate}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500">Compensation</p>
-              <p className="text-lg font-semibold text-black">{trial.compensation}</p>
+              <p className="text-xl font-medium text-gray-500">Compensation</p>
+              <p className="text-xl font-semibold text-green-600">{trial.compensation}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500">Participants</p>
-              <p className="text-lg font-semibold text-black">{completedParticipants.length}</p>
+              <p className="text-xl font-medium text-gray-500">Participants</p>
+              <p className="text-xl font-semibold text-black">{completedParticipants.length}</p>
             </div>
           </div>
         </div>
@@ -89,27 +112,31 @@ export default function HomePageTrialRunner() {
       {/* Participants Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="bg-white p-8 rounded-xl shadow-xl border-4 border-black">
-          <h2 className="text-3xl font-bold text-red-600 mb-6 text-center">Participants</h2>
+          <h2 className="text-5xl font-bold text-red-600 mb-6 text-center">Volunteers</h2>
           {completedParticipants.length > 0 ? (
             <ul className="space-y-6">
               {completedParticipants.map((participant) => (
                 <li
                   key={participant.id}
-                  className="b p-6 rounded-lg border-2 border-black shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300 bg-red-50"
+                  className="bg-red-50 p-6 rounded-lg border-2 border-black shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300"
                 >
                   <h3 className="text-2xl font-bold text-black">
-                  <Link
-                  href={`/VolunteerProfile/${participant.id}`}
-                  className="text-red-600 hover:text-gray-700 hover:underline transition-colors duration-200"
-                  >
-                  {participant.name}
-                  </Link>
+                    <Link
+                      href={`/VolunteerProfile/${participant.id}`}
+                      className="text-red-600 hover:text-gray-700 hover:underline transition-colors duration-200"
+                    >
+                      {participant.name}
+                    </Link>
                   </h3>
                   <p className="text-sm text-gray-600 mt-2">
-                  <span className="font-medium text-gray-800">Age:</span> {participant.age}
+                    <span className="font-medium text-gray-800">Age:</span> {participant.age}
                   </p>
                   <p className="text-sm text-gray-600">
-                  <span className="font-medium text-gray-800">Email:</span> {participant.email}
+                    <span className="font-medium text-gray-800">Email:</span> {participant.email}
+                  </p>
+                  <p className="text-sm text-gray-600 mt-2">
+                    <span className="font-medium text-gray-800">Message:</span>{" "}
+                    {participant.message || "No message provided."}
                   </p>
                 </li>
               ))}

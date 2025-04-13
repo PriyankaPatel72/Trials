@@ -20,6 +20,9 @@ export default function TrialPage({ params }: { params: { id: string } }) {
     eligibility: string;
   } | null>(null);
 
+  const [description, setDescription] = useState("");
+  const [wordCount, setWordCount] = useState(0);
+
   // Mock data (replace with actual API call or database query)
   const mockTrials = [
     {
@@ -54,6 +57,15 @@ export default function TrialPage({ params }: { params: { id: string } }) {
     setTrial(foundTrial || null);
   }, [params.id]);
 
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const inputText = e.target.value;
+    const words = inputText.trim().split(/\s+/); // Split by whitespace
+    if (words.length <= 200) {
+      setDescription(inputText);
+      setWordCount(words.length);
+    }
+  };
+
   if (!trial) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-yellow-100 flex items-center justify-center">
@@ -84,10 +96,14 @@ export default function TrialPage({ params }: { params: { id: string } }) {
             <strong>What to Expect:</strong> Participants will be required to attend weekly sessions and complete surveys about their experiences.
           </p>
           <textarea
-            placeholder="Write a 200-character blurb about yourself..."
-            maxLength={200}
+            placeholder="Write a description about yourself (200-word limit)..."
+            value={description}
+            onChange={handleDescriptionChange}
             className="mt-4 w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
           ></textarea>
+          <p className="text-sm text-gray-600 mt-2">
+            Word count: {wordCount}/200
+          </p>
           <div className="flex space-x-4 mt-6">
             <button
               onClick={() => alert("Application submitted!")}
