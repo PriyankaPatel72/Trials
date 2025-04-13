@@ -32,99 +32,43 @@ export default function Home() {
     setIsLoading(true);
     setError("");
 
-    try {
-      const response = await fetch("http://localhost:8085/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-      
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || "Server error");
-      }
-      else{
-        const volunteer = response.body;
-        
-        if (volunteer) {
-          
-          router.push("/HomePage"); // Redirect on success
-          
+    fetch("http://localhost:8085/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((errorText) => {
+            throw new Error(errorText || "Server error");
+          });
         }
-        if (!volunteer) {
+        return response.text(); // Resolve as a string
+      })
+      .then((volunteerStatus) => {
+        console.log("Volunteer status:", volunteerStatus);
+
+        if (volunteerStatus === "volunteer") {
+          console.log("User is a volunteer");
+          router.push("/HomePage");
+        } else if (volunteerStatus === "firm") {
+          console.log("User is a researcher");
           router.push("/HomePageTrialRunner");
         }
-      }
-
-
-      const data = await response.json();
-
-      if (typeof window !== "undefined") {
-        localStorage.setItem("userId", data.id); // Store user ID in localStorage
-        localStorage.setItem(
-          "userType",
-          data.isVolunteer ? "volunteer" : "researcher"
-        ); // Store user type
-      }
-
-      if (data.isVolunteer) {
-        router.push("/HomePage"); // Redirect to Volunteer Homepage
-      } else {
-        router.push("/HomePageTrialRunner"); // Redirect to Researcher Homepage
-      }
-    } catch (err: any) {
-      setError(err.message || "Failed to log in. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+      })
+      .catch((err) => {
+        setError(err.message || "Failed to log in. Please try again.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   setIsLoading(true);
-  //   setError("");
-  
-  //   try {
-  //     const response = await fetch("http://localhost:8085/api/auth/login", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ email, password }),
-  //     });
-  
-  //     if (!response.ok) {
-  //       const data = await response.json();
-  //       throw new Error(data.message || "Server error");
-  //     }
-  
-  //     const data = await response.json();
-  
-  //     // ✅ Store sessionId in a cookie or memory
-  //     document.cookie = `sessionId=${data.sessionId}; path=/; max-age=86400`;
-
-  
-  //     // You can also store user info in context or memory
-  //     if (data.volunteer) {
-  //       router.push("/HomePage");
-  //     } else {
-  //       router.push("/HomePageTrialRunner");
-  //     }
-  
-  //   } catch (err: any) {
-  //     setError(err.message || "Login failed.");
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-  
- 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-yellow-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <Head>

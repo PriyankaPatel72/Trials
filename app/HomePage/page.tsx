@@ -129,11 +129,20 @@ export default function HomePage() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            volunteerId: "67fb161d2e166fe4df4a1368",
+            volunteerId: "67fba32197c1063f165d24a4",
             postingId: id,
           }),
         }
       );
+      if (applyResponse.ok) {
+        // Remove the applied posting from the filteredTrials state
+        setFilteredTrials((prevTrials) =>
+          prevTrials.filter((trial) => trial.id !== id)
+        );
+        console.log("Successfully applied and removed trial from list.");
+      } else {
+        console.error("Failed to apply:", await applyResponse.text());
+      }
       
       console.log("Apply result:", applyResponse.text);
     } catch (err) {

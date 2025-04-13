@@ -59,13 +59,7 @@ export default function TrialDataForm() {
           throw new Error(data.message || "Server error");
         }
         else{
-          const volunteer = await response.body;
-          if (volunteer) {
-            router.push("/HomePage"); // Redirect on success
-          }
-          if (!volunteer) {
-            router.push("/HomePageTrialRunner");
-          }
+          router.push("/HomePageTrialRunner");
         }
     } catch (err) {
       setError("Failed to post the advertisement. Please try again.");

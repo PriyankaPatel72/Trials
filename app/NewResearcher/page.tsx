@@ -50,9 +50,9 @@ export default function NewResearcher() {
         throw new Error(data.message || "Server error");
       }
 
-      const data = await response.json();
-      localStorage.setItem("userId", data.id); // Store user ID in localStorage
-      localStorage.setItem("userType", "researcher"); // Store user type
+      // const data = await response.json();
+      // localStorage.setItem("userId", data.id); // Store user ID in localStorage
+      // localStorage.setItem("userType", "researcher"); // Store user type
       router.push("/HomePageTrialRunner"); // Redirect to Researcher Homepage
     } catch (err: any) {
       setError(err.message || "Failed to create an account. Please try again.");
