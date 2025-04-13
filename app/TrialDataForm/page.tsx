@@ -1,34 +1,72 @@
 "use client";
 import React, { useState } from "react";
 import Head from "next/head";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Footer from "../../components/Footer/Footer";
 
 export default function TrialDataForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [eligibility, setEligibility] = useState("");
-  const [compensation, setCompensation] = useState("");
+  const [ageRange, setEligibility] = useState("");
+  const [paidOrUnpaid, setCompensation] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const allowExtraRequirements = false;
+  const router = useRouter();
+  
+  
+  
+  
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
-    if (!title || !description || !eligibility || !compensation || !startDate || !endDate) {
+    if (!title || !description || !ageRange || !paidOrUnpaid|| !startDate || !endDate) {
       setError("All fields are required.");
       setIsLoading(false);
       return;
     }
 
     try {
-      // Replace with actual logic to post the advertisement
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      alert("Clinical trial advertisement posted successfully!");
+      
+        const response = await fetch("http://localhost:8085/api/postings?researchFirmId=67fb090ca71e20e5ab7efa31", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title,
+            description,
+            paidOrUnpaid,
+            ageRange,
+            allowExtraRequirements,
+            startDate,
+            endDate
+
+            
+  
+          }),
+        });
+  
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.message || "Server error");
+        }
+        else{
+          const volunteer = await response.body;
+          if (volunteer) {
+            router.push("/HomePage"); // Redirect on success
+          }
+          if (!volunteer) {
+            router.push("/HomePageTrialRunner");
+          }
+        }
     } catch (err) {
       setError("Failed to post the advertisement. Please try again.");
     } finally {
@@ -119,39 +157,38 @@ export default function TrialDataForm() {
                 ></textarea>
               </div>
 
-              {/* Eligibility Criteria */}
-              <div>
-                <label htmlFor="eligibility" className="block text-lg font-medium text-gray-700">
-                  Eligibility Criteria
-                </label>
-                <textarea
-                  id="eligibility"
-                  name="eligibility"
-                  required
-                  value={eligibility}
-                  onChange={(e) => setEligibility(e.target.value)}
-                  className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
-                  placeholder="List the eligibility criteria for participants"
-                  rows={3}
-                ></textarea>
-              </div>
+            <div>
+              <label htmlFor="eligibility" className="block text-sm font-medium text-black">
+                Eligibility Criteria
+              </label>
+              <textarea
+                id="eligibility"
+                name="eligibility"
+                required
+                value={ageRange}
+                onChange={(e) => setEligibility(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="List the eligibility criteria for participants"
+                rows={3}
+              ></textarea>
+            </div>
 
-              {/* Compensation */}
-              <div>
-                <label htmlFor="compensation" className="block text-lg font-medium text-gray-700">
-                  Compensation
-                </label>
-                <input
-                  id="compensation"
-                  name="compensation"
-                  type="text"
-                  required
-                  value={compensation}
-                  onChange={(e) => setCompensation(e.target.value)}
-                  className="mt-2 block w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 text-lg"
-                  placeholder="Enter the compensation amount or details"
-                />
-              </div>
+            <div>
+              <label htmlFor="compensation" className="block text-sm font-medium text-black">
+                Compensation
+              </label>
+              <input
+                id="compensation"
+                name="compensation"
+                type="text"
+                required
+                value={paidOrUnpaid}
+                onChange={(e) => setCompensation(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Enter the compensation amount or details"
+              />
+            </div>
+
 
               {/* Start Date */}
               <div>

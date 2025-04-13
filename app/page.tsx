@@ -43,11 +43,25 @@ export default function Home() {
           password,
         }),
       });
+      
 
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.message || "Server error");
       }
+      else{
+        const volunteer = response.body;
+        
+        if (volunteer) {
+          
+          router.push("/HomePage"); // Redirect on success
+          
+        }
+        if (!volunteer) {
+          router.push("/HomePageTrialRunner");
+        }
+      }
+
 
       const data = await response.json();
 
@@ -71,6 +85,46 @@ export default function Home() {
     }
   };
 
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+  //   setError("");
+  
+  //   try {
+  //     const response = await fetch("http://localhost:8085/api/auth/login", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ email, password }),
+  //     });
+  
+  //     if (!response.ok) {
+  //       const data = await response.json();
+  //       throw new Error(data.message || "Server error");
+  //     }
+  
+  //     const data = await response.json();
+  
+  //     // ✅ Store sessionId in a cookie or memory
+  //     document.cookie = `sessionId=${data.sessionId}; path=/; max-age=86400`;
+
+  
+  //     // You can also store user info in context or memory
+  //     if (data.volunteer) {
+  //       router.push("/HomePage");
+  //     } else {
+  //       router.push("/HomePageTrialRunner");
+  //     }
+  
+  //   } catch (err: any) {
+  //     setError(err.message || "Login failed.");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+  
+ 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-yellow-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <Head>
