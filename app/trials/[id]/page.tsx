@@ -1,11 +1,5 @@
 "use client";
 
-// this page should add a blurb to the page about what the study is about and what the user can expect to do in the study.
-// it should also have a button to apply for the study and a button to go back to the home page
-// it should go deeper into qualifications on what the user needs (something a p tag can do).
-// it should also have a button to go back to the home page and a button to apply for the study.
-// I'll submit an application meaning your info was sent to the study and allow you to have a 200 char blurb about yourself.
-
 import { useEffect, useState } from "react";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
@@ -19,6 +13,9 @@ export default function TrialPage({ params }: { params: { id: string } }) {
     startDate: string;
     eligibility: string;
   } | null>(null);
+
+  const [description, setDescription] = useState("");
+  const [wordCount, setWordCount] = useState(0);
 
   // Mock data (replace with actual API call or database query)
   const mockTrials = [
@@ -54,6 +51,15 @@ export default function TrialPage({ params }: { params: { id: string } }) {
     setTrial(foundTrial || null);
   }, [params.id]);
 
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const inputText = e.target.value;
+    const words = inputText.trim().split(/\s+/); // Split by whitespace
+    if (words.length <= 200) {
+      setDescription(inputText);
+      setWordCount(words.length);
+    }
+  };
+
   if (!trial) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-yellow-100 flex items-center justify-center">
@@ -62,8 +68,35 @@ export default function TrialPage({ params }: { params: { id: string } }) {
     );
   }
 
+  // Retrieve the current user's ID from localStorage
+  const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-red-50 to-yellow-100">
+      {/* Sticky Navigation Bar */}
+      <nav className="bg-red-600 shadow-lg border-b-4 border-black sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <a href="/HomePage" className="text-2xl font-bold text-white">
+                UMD TerpTrials
+              </a>
+            </div>
+            <div className="flex space-x-4">
+              <a href="/HomePage" className="text-lg text-white hover:text-yellow-300 transition">
+                Home
+              </a>
+              <a
+                href={userId ? `/VolunteerProfile/${userId}` : "#"}
+                className="text-lg text-white hover:text-yellow-300 transition"
+              >
+                Profile
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
       {/* Header Component */}
       <Header />
 
@@ -84,10 +117,14 @@ export default function TrialPage({ params }: { params: { id: string } }) {
             <strong>What to Expect:</strong> Participants will be required to attend weekly sessions and complete surveys about their experiences.
           </p>
           <textarea
-            placeholder="Write a 200-character blurb about yourself..."
-            maxLength={200}
+            placeholder="Write a description about yourself (200-word limit)..."
+            value={description}
+            onChange={handleDescriptionChange}
             className="mt-4 w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
           ></textarea>
+          <p className="text-sm text-gray-600 mt-2">
+            Word count: {wordCount}/200
+          </p>
           <div className="flex space-x-4 mt-6">
             <button
               onClick={() => alert("Application submitted!")}

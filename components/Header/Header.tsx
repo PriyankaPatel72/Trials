@@ -6,8 +6,12 @@ export default function Header() {
   const userName = searchParams.get("userName") || "Guest"; // Default to "Guest" if no name is provided
 
   return (
-    <header className="bg-red-600 text-white py-12">
+    <header className="bg-red-600 text-white py-12 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        {/* Turtle Icon */}
+        <div className="absolute top-4 left-4">
+        </div>
+
         <h1 className="text-5xl font-bold">
           Welcome to UMD TerpTrials, {userName}!
         </h1>

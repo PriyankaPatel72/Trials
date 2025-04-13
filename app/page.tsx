@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
 
@@ -8,9 +8,25 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [userLink, setUserLink] = useState("");
   const router = useRouter();
 
-  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Safely access localStorage only on the client side
+      const userType = localStorage.getItem("userType");
+      const userId = localStorage.getItem("userId");
+
+      if (userType && userId) {
+        setUserLink(
+          userType === "volunteer"
+            ? `/VolunteerProfile/${userId}`
+            : "/HomePageTrialRunner"
+        );
+      }
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -24,8 +40,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           email,
-          password
-
+          password,
         }),
       });
       
@@ -47,14 +62,29 @@ export default function Home() {
         }
       }
 
-  
 
+      const data = await response.json();
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("userId", data.id); // Store user ID in localStorage
+        localStorage.setItem(
+          "userType",
+          data.isVolunteer ? "volunteer" : "researcher"
+        ); // Store user type
+      }
+
+      if (data.isVolunteer) {
+        router.push("/HomePage"); // Redirect to Volunteer Homepage
+      } else {
+        router.push("/HomePageTrialRunner"); // Redirect to Researcher Homepage
+      }
     } catch (err: any) {
-      setError(err.message || "Failed to create an account. Please try again.");
+      setError(err.message || "Failed to log in. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
+
   // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
   //   setIsLoading(true);
@@ -94,12 +124,15 @@ export default function Home() {
   //   }
   // };
   
-  
+ 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-yellow-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <Head>
         <title>TerpTrial | Login</title>
-        <meta name="description" content="Earn money participating in clinical trials" />
+        <meta
+          name="description"
+          content="Earn money participating in clinical trials"
+        />
       </Head>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -142,7 +175,7 @@ export default function Home() {
                     >
                       <path
                         fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293-1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
                         clipRule="evenodd"
                       />
                     </svg>
@@ -155,7 +188,10 @@ export default function Home() {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-lg font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-lg font-medium text-gray-700"
+              >
                 University Email
               </label>
               <div className="mt-2">
@@ -174,7 +210,10 @@ export default function Home() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-lg font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-lg font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-2">
@@ -208,10 +247,22 @@ export default function Home() {
           <div className="mt-8 text-center">
             <p className="text-lg text-gray-700">
               New to TerpTrial?{" "}
-              <a href="/SelectUserType" className="font-bold text-red-600 hover:text-red-500">
+              <a
+                href="/SelectUserType"
+                className="font-bold text-red-600 hover:text-red-500"
+              >
                 Create an account
               </a>
             </p>
+          </div>
+
+          <div className="mt-8 text-center">
+            <a
+              href={userLink} // Use the dynamically set link
+              className="text-lg text-red-600 hover:text-red-500 transition"
+            >
+              Go to your profile
+            </a>
           </div>
         </div>
       </div>
