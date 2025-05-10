@@ -57,9 +57,9 @@ export default function NewUser() {
         throw new Error(data.message || "Server error");
       }
 
-      const data = await response.json();
-      localStorage.setItem("userId", data.id); // Store user ID in localStorage
-      localStorage.setItem("userType", "volunteer"); // Store user type
+      // const data = await response.json();
+      // localStorage.setItem("userId", data.id); // Store user ID in localStorage
+      // localStorage.setItem("userType", "volunteer"); // Store user type
       router.push("/HomePage"); // Redirect to Volunteer Homepage
     } catch (err: any) {
       setError(err.message || "Failed to create an account. Please try again.");

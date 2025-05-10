@@ -32,43 +32,41 @@ export default function Home() {
     setIsLoading(true);
     setError("");
 
-    try {
-      const response = await fetch("http://localhost:8085/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+    fetch("http://localhost:8085/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((errorText) => {
+            throw new Error(errorText || "Server error");
+          });
+        }
+        return response.text(); // Resolve as a string
+      })
+      .then((volunteerStatus) => {
+        console.log("Volunteer status:", volunteerStatus);
+
+        if (volunteerStatus === "volunteer") {
+          console.log("User is a volunteer");
+          router.push("/HomePage");
+        } else if (volunteerStatus === "firm") {
+          console.log("User is a researcher");
+          router.push("/TrialDataForm");
+        }
+      })
+      .catch((err) => {
+        setError(err.message || "Failed to log in. Please try again.");
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || "Server error");
-      }
-
-      const data = await response.json();
-
-      if (typeof window !== "undefined") {
-        localStorage.setItem("userId", data.id); // Store user ID in localStorage
-        localStorage.setItem(
-          "userType",
-          data.isVolunteer ? "volunteer" : "researcher"
-        ); // Store user type
-      }
-
-      if (data.isVolunteer) {
-        router.push("/HomePage"); // Redirect to Volunteer Homepage
-      } else {
-        router.push("/HomePageTrialRunner"); // Redirect to Researcher Homepage
-      }
-    } catch (err: any) {
-      setError(err.message || "Failed to log in. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (

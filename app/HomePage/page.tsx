@@ -1,144 +1,287 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 
+// A dedicated modal component for showing the questionnaire and score.
+const QuestionnaireModal = ({
+  questions,
+  answers,
+  onAnswer,
+  onSubmit,
+  score,
+  onClose,
+}: {
+  questions: any[];
+  answers: { [key: string]: boolean };
+  onAnswer: (question: string, answer: boolean) => void;
+  onSubmit: () => void;
+  score: number | null;
+  onClose: () => void;
+}) => {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="bg-white rounded-lg shadow-2xl w-full max-w-lg p-6 overflow-auto max-h-full">
+        {score === null ? (
+          <>
+            <h2 className="text-2xl font-bold mb-4 text-center">Questionnaire</h2>
+            <div className="space-y-4">
+              {questions.map((q) => (
+                <div key={q.question} className="border rounded-md p-4">
+                  <p className="mb-2 text-lg">{q.question}</p>
+                  <div className="flex space-x-4">
+                    <button
+                      onClick={() => onAnswer(q.question, true)}
+                      className={`flex-1 py-2 rounded-md border transition ${
+                        answers[q.question] === true
+                          ? "bg-green-500 text-white"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      Yes
+                    </button>
+                    <button
+                      onClick={() => onAnswer(q.question, false)}
+                      className={`flex-1 py-2 rounded-md border transition ${
+                        answers[q.question] === false
+                          ? "bg-red-500 text-white"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      No
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={onSubmit}
+              className="mt-6 w-full py-2 rounded-md bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
+            >
+              Submit Quiz
+            </button>
+          </>
+        ) : (
+          <>
+            <h2 className="text-2xl font-bold mb-4 text-center">Your Score</h2>
+            <p className="text-5xl font-extrabold text-center mb-6">
+              {score.toFixed(2)}%
+            </p>
+            <button
+              onClick={onClose}
+              className="w-full py-2 rounded-md bg-green-600 text-white font-semibold hover:bg-green-700 transition"
+            >
+              Close
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export default function HomePage() {
-  const mockTrials = [
-    {
-      id: 1,
-      title: "Sleep Study for College Students",
-      description: "Study the effects of sleep patterns on academic performance.",
-      compensation: 500,
-      startDate: "2025-04-01",
-      eligibility: "Ages 18-25, enrolled in college",
-      minAge: 18,
-      maxAge: 25,
-    },
-    {
-      id: 2,
-      title: "Nutrition and Fitness Study",
-      description: "Analyze the impact of diet and exercise on health.",
-      compensation: 300,
-      startDate: "2025-05-01",
-      eligibility: "Ages 20-30, no chronic illnesses",
-      minAge: 20,
-      maxAge: 30,
-    },
-    {
-      id: 3,
-      title: "Mental Health and Stress Study",
-      description: "Explore the relationship between stress and mental health.",
-      compensation: 400,
-      startDate: "2025-06-01",
-      eligibility: "Ages 18-40, no medication use",
-      minAge: 18,
-      maxAge: 40,
-    },
-  ];
+  const [filteredTrials, setFilteredTrials] = useState<any[]>([]);
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [answers, setAnswers] = useState<{ [key: string]: boolean }>({});
+  const [score, setScore] = useState<number | null>(null);
 
-  const [filteredTrials, setFilteredTrials] = useState(mockTrials);
-  const [userId, setUserId] = useState<string | null>(null);
-
-  // Retrieve the current user's ID from localStorage
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setUserId(localStorage.getItem("userId"));
-    }
+    const fetchTrials = async () => {
+      try {
+        const response = await fetch("http://localhost:8085/api/postings");
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(`Error ${response.status}: ${text}`);
+        }
+        const trials = await response.json();
+        setFilteredTrials(trials);
+      } catch (error) {
+        console.error("Failed to fetch trials:", error);
+      }
+    };
+
+    fetchTrials();
   }, []);
 
-  // Calculate total compensation available
-  const totalCompensation = filteredTrials.reduce((sum, trial) => sum + trial.compensation, 0);
+  // Called when the user clicks "Apply" on a trial.
+  const handleClick = async (id: string, description: string) => {
+    try {
+      const response = await fetch("http://127.0.0.1:5000/recommend", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          requirement: description,
+        }),
+      });
+      const result = await response.json();
+      setQuestions(result);
+
+      const applyResponse = await fetch(
+        `http://localhost:8085/api/applications/apply`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            volunteerId: "67fba32197c1063f165d24a4",
+            postingId: id,
+          }),
+        }
+      );
+      if (applyResponse.ok) {
+        // Remove the applied posting from the filteredTrials state
+        setFilteredTrials((prevTrials) =>
+          prevTrials.filter((trial) => trial.id !== id)
+        );
+        console.log("Successfully applied and removed trial from list.");
+      } else {
+        console.error("Failed to apply:", await applyResponse.text());
+      }
+      
+      console.log("Apply result:", applyResponse.text);
+    } catch (err) {
+      console.error("Error posting to API:", err);
+    }
+  };
+
+  // Update the user's answer for a given question.
+  const handleAnswer = (question: string, answer: boolean) => {
+    setAnswers((prev) => ({ ...prev, [question]: answer }));
+  };
+
+  // Calculate the score based on the selected answers.
+  const calculateScore = () => {
+    let totalScore = 0;
+    let maxScore = 0;
+    questions.forEach((q: { question: string; weight: number }) => {
+      maxScore += q.weight;
+      if (answers[q.question]) {
+        totalScore += q.weight;
+      }
+    });
+    setScore(maxScore ? (totalScore / maxScore) * 100 : 0);
+  };
+
+  // Reset the questionnaire modal state.
+  const resetModal = () => {
+    setQuestions([]);
+    setAnswers({});
+    setScore(null);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-yellow-100">
-      <Head>
-        <title>UMD TerpTrials | Available Trials</title>
-        <meta name="description" content="Browse available clinical trials at the University of Maryland." />
-      </Head>
+    <>
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-yellow-100">
+        <Head>
+          <title>UMD TerpTrials | Available Trials</title>
+          <meta
+            name="description"
+            content="Browse available clinical trials at the University of Maryland."
+          />
+        </Head>
 
-      {/* Sticky Navigation Bar */}
-      <nav className="bg-red-600 shadow-lg border-b-4 border-black sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <a href="/HomePage" className="text-2xl font-bold text-white">
-                UMD TerpTrials
-              </a>
-            </div>
-            <div className="flex space-x-4">
-              <a href="/HomePage" className="text-lg text-white hover:text-yellow-300 transition">
-                Home
-              </a>
-              <a
-                href={userId ? `/VolunteerProfile/${userId}` : "#"}
-                className="text-lg text-white hover:text-yellow-300 transition"
-              >
-                Profile
-              </a>
+        <nav className="bg-red-600 shadow-lg border-b-4 border-black sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <div className="flex items-center">
+                <a href="/HomePage" className="text-2xl font-bold text-white">
+                  UMD TerpTrials
+                </a>
+              </div>
+              <div className="flex space-x-4">
+                <a
+                  href="/HomePage"
+                  className="text-lg text-white hover:text-yellow-300 transition"
+                >
+                  Home
+                </a>
+                <a className="text-lg text-white hover:text-yellow-300 transition">
+                  Profile
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      </nav>
+        </nav>
 
-      {/* Header Component */}
-      <Header />
+        <Header />
 
-      {/* Available Trials Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col sm:flex-row justify-center gap-8">
-        {/* Available Trials Count */}
-        <div className="bg-white p-8 rounded-xl shadow-xl border-4 border-black text-center flex-1 transform hover:scale-105 transition-transform">
-          <h2 className="text-6xl font-extrabold text-red-600">{mockTrials.length}</h2>
-          <p className="text-2xl text-gray-900 mt-4">Available Trials</p>
-        </div>
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <header className="mb-8">
+            <h1 className="text-4xl font-extrabold text-black">
+              Available Clinical Trials
+            </h1>
+            <p className="text-lg text-gray-700 mt-2">
+              Browse and participate in trials that match your interests and
+              eligibility.
+            </p>
+          </header>
 
-        {/* Total Compensation */}
-        <div className="bg-white p-8 rounded-xl shadow-xl border-4 border-black text-center flex-1 transform hover:scale-105 transition-transform">
-          <h2 className="text-6xl font-extrabold text-green-600">${totalCompensation}</h2>
-          <p className="text-2xl text-gray-900 mt-4">Ready for You to Grab</p>
-        </div>
-      </section>
+          {filteredTrials.length === 0 ? (
+            <p className="text-gray-600 text-lg">Loading trials...</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredTrials.map((trial) => (
+                <div
+                  key={trial.id}
+                  className="bg-white p-6 rounded-lg shadow-lg border-2 border-black"
+                >
+                  <h2 className="text-2xl font-semibold text-black">
+                    {trial.title}
+                  </h2>
+                  <p className="text-lg text-gray-500">
+                    <strong>Date Posted:</strong> {trial.startDate}
+                  </p>
+                  <p className="text-lg text-gray-700 mt-2">
+                    <strong>Requirements:</strong> {trial.postDescription}
+                  </p>
+                  <p className="text-lg text-green-600 mt-2">
+                    <strong>Compensation:</strong> ${trial.paidOrUnpaid}
+                  </p>
+                  <p className="text-lg text-gray-500">
+                    <strong>Start Date:</strong> {trial.startDate}
+                  </p>
+                  <p className="text-lg text-gray-500">
+                    <strong>End Date:</strong> {trial.endDate}
+                  </p>
+                  <p className="text-lg text-gray-500">
+                    <strong>Eligibility:</strong> {trial.ageRange}
+                  </p>
+                  <p className="text-lg text-gray-500">
+                    <strong>ID:</strong> {trial.id}
+                  </p>
 
-      {/* Trials List */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <header className="mb-8">
-          <h1 className="text-4xl font-extrabold text-black">Available Clinical Trials</h1>
-          <p className="text-lg text-gray-700 mt-2">
-            Browse and participate in trials that match your interests and eligibility.
-          </p>
-        </header>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredTrials.map((trial) => (
-            <div
-              key={trial.id}
-              className="bg-white p-8 rounded-xl shadow-xl border-4 border-black transform hover:scale-105 transition-transform"
-            >
-              <h2 className="text-2xl font-bold text-black">{trial.title}</h2>
-              <p className="text-lg text-gray-700 mt-4">{trial.description}</p>
-              <p className="text-lg text-green-600 mt-4">
-                <strong>Compensation:</strong> ${trial.compensation}
-              </p>
-              <p className="text-lg text-gray-500 mt-2">
-                <strong>Start Date:</strong> {trial.startDate}
-              </p>
-              <p className="text-lg text-gray-500 mt-2">
-                <strong>Eligibility:</strong> {trial.eligibility}
-              </p>
-              <a
-                href={`/trials/${trial.id}`}
-                className="mt-6 inline-block px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition border-2 border-black text-lg"
-              >
-                Apply
-              </a>
+                  <button
+                    onClick={() => handleClick(trial.id, trial.postDescription)}
+                    className="mt-4 inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition border-2 border-black text-lg"
+                  >
+                    Apply
+                  </button>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </main>
+          )}
+        </main>
 
-      {/* Footer Component */}
-      <Footer />
-    </div>
+        <Footer />
+
+        {/* Modal for the questionnaire */}
+        {questions.length > 0 && (
+          <QuestionnaireModal
+            questions={questions}
+            answers={answers}
+            onAnswer={handleAnswer}
+            onSubmit={calculateScore}
+            score={score}
+            onClose={resetModal}
+          />
+        )}
+      </div>
+    </>
   );
 }

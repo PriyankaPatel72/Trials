@@ -1,3 +1,8 @@
+# The backend is here --> https://github.com/bhavnakumari/Terp-Trails
+
+#Application Video --> https://youtu.be/1dd5uMZeEYM
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
